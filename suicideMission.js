@@ -43,23 +43,6 @@ class Normandy {
     set cannonUpgraded(cUpgrade) { this._cannonUpgraded = cUpgrade; }
 }
 
-/*
-Section Checklist
-- The Approach
-    [x]  Armor check
-    [x]  Shield check
-    [x]  Weapons check
-- The Base
-    [x]  The Vents
-    []  The Long Walk
-    [x]  The Escort
-    [x]  The Crew
-- The Endgame
-    [x]  The Final Fight
-    []  Hold the Line
-    []  The Commander
-*/
-
 const theApproachArmorCheck = newNormandy => {
     // Heavy Ship Armor is from Jacob who is always an active squad member,
     // no need to check if active
@@ -97,22 +80,18 @@ const theApproachWeaponsCheck = newNormandy => {
     }
 };
 
-const theBaseVentCheck = (ventSpecialist, ventSpecialistIsLoyal, fireteamLead, fireteamLeadIsLoyal) => {
+const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
     // Squadmates that are safe to send into vents
     const safeVentSpecialist = ["Tali", "Legion", "Kasumi"];
     // Squadmates that are safe to lead first fireteam
     const safeFireteamLead = ["Miranda", "Jacob", "Garrus"];
     
-    // Gross but..
-    // Vent specialist must be in list and loyal
-    // AND
-    // Fireteam lead must be in list and loyal
-    // ELSE
-    // Kill the vent specialist
+    // Vent specialist must be in list and loyal AND fireteam lead must be in list and loyal
     if ((safeVentSpecialist.includes(ventSpecialist) && ventSpecialist.loyalty) && 
     (safeFireteamLead.includes(fireteamLead) && fireteamLead.loyalty)) {
         return `${ventSpecialist} survives`;
     } else {
+        // Else, kill the vent specialist
         ventSpecialist.alive(false);
         return `${ventSpecialist} dies`;
     }
@@ -152,11 +131,22 @@ const holdTheLine = (x, y) => {
     let teamGroup3 = ['Jack', 'Kasumi', 'Tali', 'Mordin'];
 }
 
+const crewRequirementsCheck = reqSquad => {
+    // 8 squadmates are required to start the Suicide Mission
+    // Of those 8, you are forced to have recruited AND active: Jacob, Miranda, Mordin, Garrus, and Jack
+    if (reqSquad.length < 8) {
+        console.log("Error: Must have 8 squad members at a minimum");
+        return process.exit(1);
+    }
+
+    // TODO: Do you have the required recruited + active squad members?
+};
+
 // Build a Normandy
 let NormandySR2 = new Normandy();
 
 // Create all the Squadmates
-// Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt
+// Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
 let Kasumi = new Squadmates('Kasumi');
 let Grunt = new Squadmates('Grunt');
 let Thane = new Squadmates('Thane');
@@ -192,10 +182,10 @@ let activeSquad = [
 
 // User selected bits
 // Did you upgrade the Normandy?
-let aU = NormandySR2.armorUpgraded(true);
-let sU = NormandySR2.shieldUpgraded(true);
-let cU = NormandySR2.cannonUpgraded(true);
+NormandySR2.armorUpgraded(true);
+NormandySR2.shieldUpgraded(true);
+NormandySR2.cannonUpgraded(true);
 
-// Begin The Approach
-let aAC = theApproachArmorCheck(NormandySR2);
-let aSC = theApproachShieldCheck(NormandySR2, activeSquad);
+// BEGIN THE APPROACH
+console.log(theApproachArmorCheck(NormandySR2));
+console.log(theApproachShieldCheck(NormandySR2, activeSquad));
