@@ -1,0 +1,19 @@
+{
+  "name": "me2-suicide-mission-calculator",
+  "version": "1.0.0",
+  "description": "JavaScript practice: Creating a Suicide Mission calculator for Mass Effect 2",
+  "main": "suicideMission.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edwcmiller3/ME2-Suicide-Mission-Calculator.git"
+  },
+  "author": "Edward Miller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edwcmiller3/ME2-Suicide-Mission-Calculator/issues"
+  },
+  "homepage": "https://github.com/edwcmiller3/ME2-Suicide-Mission-Calculator#readme"
+}
