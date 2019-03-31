@@ -64,6 +64,7 @@ const theApproachShieldCheck = (newNormandy, squad) => {
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
         // TODO
         // return "Normandy shield check failed - ${person} dies"
+        return "TODO";
     }
 };
 
@@ -182,9 +183,9 @@ let activeSquad = [
 
 // User selected bits
 // Did you upgrade the Normandy?
-NormandySR2.armorUpgraded(true);
-NormandySR2.shieldUpgraded(true);
-NormandySR2.cannonUpgraded(true);
+NormandySR2.armorUpgraded = true;
+NormandySR2.shieldUpgraded = true;
+NormandySR2.cannonUpgraded = true;
 
 // BEGIN THE APPROACH
 console.log(theApproachArmorCheck(NormandySR2));
