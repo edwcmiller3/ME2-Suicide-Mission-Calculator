@@ -57,14 +57,35 @@ const theApproachArmorCheck = newNormandy => {
 const theApproachShieldCheck = (newNormandy, squad) => {
     // Multicore Shielding is from Tali whose recruitment can be skipped,
     // check that she is recruited
-    if (Tali in squad && newNormandy.shieldUpgraded) {
+    if (squad.includes(Tali) && newNormandy.shieldUpgraded) {
         return "Normandy shield check passed - Safe";
     } else {
         // Kill one non-party member in order: 
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
         // TODO
         // return "Normandy shield check failed - ${person} dies"
-        return "TODO";
+        const theApproachShieldCheckDeath = [
+            'Kasumi', 
+            'Legion', 
+            'Tali', 
+            'Thane', 
+            'Garrus', 
+            'Zaeed', 
+            'Grunt',
+            'Samara',
+            'Morinth'
+        ];
+        console.log(squad);
+        // WIP: Need to compare squad (activeSquad) to theApproachShieldCheckDeath in order,
+        // get the first match, then kill that squadmember.
+        // Should be doable with .find() but it's late and my brain isn't working right now.
+        // Got Kasumi to match but when she's not a squadmember, it selects next in squad (Grunt)
+        // instead of Legion.
+        const death = squad.find(s => {
+            return (theApproachShieldCheckDeath.includes(s.name)) && (s.alive);
+        });
+        //console.log(death);
+        //return `${death.name} dies`;
     }
 };
 
@@ -148,7 +169,7 @@ let NormandySR2 = new Normandy();
 
 // Create all the Squadmates
 // Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
-let Kasumi = new Squadmates('Kasumi');
+//let Kasumi = new Squadmates('Kasumi');
 let Grunt = new Squadmates('Grunt');
 let Thane = new Squadmates('Thane');
 let Jack = new Squadmates('Jack');
@@ -167,7 +188,7 @@ let Garrus = new Squadmates('Garrus');
 // Need at least 8 active squad members
 // Active squad must include Jacob, Miranda, Mordin, Garrus, and Jack
 let activeSquad = [
-    Kasumi,
+    //Kasumi, troubleshooting theApproachShieldCheck
     Grunt,
     Thane,
     Jack,
@@ -184,7 +205,7 @@ let activeSquad = [
 // User selected bits
 // Did you upgrade the Normandy?
 NormandySR2.armorUpgraded = true;
-NormandySR2.shieldUpgraded = true;
+NormandySR2.shieldUpgraded = false; // troubleshooting theApproachShieldCheck
 NormandySR2.cannonUpgraded = true;
 
 // BEGIN THE APPROACH
