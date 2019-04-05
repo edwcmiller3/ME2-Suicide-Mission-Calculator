@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 class Squadmates {
     constructor(name) {
@@ -8,39 +8,65 @@ class Squadmates {
         this._strength = 0;
     }
 
-    get loyalty() { return this._loyalty; }
+    get loyalty() {
+        return this._loyalty;
+    }
 
-    get name() { return this._name; }
-    
-    get alive() { return this._alive; }
+    get name() {
+        return this._name;
+    }
 
-    get strength() { return this._strength; }
+    get alive() {
+        return this._alive;
+    }
 
-    set loyalty(loyal) { this._loyalty = loyal; }
+    get strength() {
+        return this._strength;
+    }
 
-    set alive(state) { this._alive = state; }
+    set loyalty(loyal) {
+        this._loyalty = loyal;
+    }
 
-    set strength(val) { this._strength = val; }
+    set alive(state) {
+        this._alive = state;
+    }
+
+    set strength(val) {
+        this._strength = val;
+    }
 }
 
 class Normandy {
     constructor() {
         this._shieldUpgraded = false;
         this._armorUpgraded = false;
-        this._cannonUpgraded = false; 
+        this._cannonUpgraded = false;
     }
 
-    get shieldUpgraded() { return this._shieldUpgraded; }
+    get shieldUpgraded() {
+        return this._shieldUpgraded;
+    }
 
-    get armorUpgraded() { return this._armorUpgraded; }
+    get armorUpgraded() {
+        return this._armorUpgraded;
+    }
 
-    get cannonUpgraded() { return this._cannonUpgraded; }
+    get cannonUpgraded() {
+        return this._cannonUpgraded;
+    }
 
-    set shieldUpgraded(sUpgrade) { this._shieldUpgraded = sUpgrade; }
+    set shieldUpgraded(sUpgrade) {
+        this._shieldUpgraded = sUpgrade;
+    }
 
-    set armorUpgraded(aUpgrade) { this._armorUpgraded = aUpgrade; }
+    set armorUpgraded(aUpgrade) {
+        this._armorUpgraded = aUpgrade;
+    }
 
-    set cannonUpgraded(cUpgrade) { this._cannonUpgraded = cUpgrade; }
+    set cannonUpgraded(cUpgrade) {
+        this._cannonUpgraded = cUpgrade;
+    }
 }
 
 const theApproachArmorCheck = newNormandy => {
@@ -60,31 +86,38 @@ const theApproachShieldCheck = (newNormandy, squad) => {
     if (squad.includes(Tali) && newNormandy.shieldUpgraded) {
         return "Normandy shield check passed - Safe";
     } else {
-        // Kill one non-party member in order: 
+        // Kill one non-party member in order:
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
         // TODO
         // return "Normandy shield check failed - ${person} dies"
         const theApproachShieldCheckDeath = [
-            'Kasumi', 
-            'Legion', 
-            'Tali', 
-            'Thane', 
-            'Garrus', 
-            'Zaeed', 
-            'Grunt',
-            'Samara',
-            'Morinth'
+            "Kasumi",
+            "Legion",
+            "Tali",
+            "Thane",
+            "Garrus",
+            "Zaeed",
+            "Grunt",
+            "Samara",
+            "Morinth"
         ];
         console.log(squad);
-        // WIP: Need to compare squad (activeSquad) to theApproachShieldCheckDeath in order,
-        // get the first match, then kill that squadmember.
-        // Should be doable with .find() but it's late and my brain isn't working right now.
-        // Got Kasumi to match but when she's not a squadmember, it selects next in squad (Grunt)
-        // instead of Legion.
-        const death = squad.find(s => {
-            return (theApproachShieldCheckDeath.includes(s.name)) && (s.alive);
+        // This doesn't work either - orders it with Grunt first
+        // Need to check that it is in this list and then order it via priority
+        let death = squad.filter(s => {
+            return (
+                s.name === "Kasumi" ||
+                s.name === "Legion" ||
+                s.name === "Tali" ||
+                s.name === "Thane" ||
+                s.name === "Garrus" ||
+                s.name === "Zaeed" ||
+                s.name === "Grunt" ||
+                s.name === "Samara" ||
+                s.name === "Morinth"
+            );
         });
-        //console.log(death);
+        console.log(death);
         //return `${death.name} dies`;
     }
 };
@@ -107,17 +140,20 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
     const safeVentSpecialist = ["Tali", "Legion", "Kasumi"];
     // Squadmates that are safe to lead first fireteam
     const safeFireteamLead = ["Miranda", "Jacob", "Garrus"];
-    
+
     // Vent specialist must be in list and loyal AND fireteam lead must be in list and loyal
-    if ((safeVentSpecialist.includes(ventSpecialist) && ventSpecialist.loyalty) && 
-    (safeFireteamLead.includes(fireteamLead) && fireteamLead.loyalty)) {
+    if (
+        safeVentSpecialist.includes(ventSpecialist) &&
+        ventSpecialist.loyalty &&
+        (safeFireteamLead.includes(fireteamLead) && fireteamLead.loyalty)
+    ) {
         return `${ventSpecialist} survives`;
     } else {
         // Else, kill the vent specialist
         ventSpecialist.alive(false);
         return `${ventSpecialist} dies`;
     }
-}
+};
 
 const theCrewCheck = missions => {
     if (missions === 0) {
@@ -134,24 +170,24 @@ const theEscortCheck = (escortSent, escort = null) => {
         if (escort && escort.loyalty) {
             return "Escort and remaining crew survive";
         } else if (escort && !escort.loyalty) {
-            return "Escort dies, remaining crew survives"
+            return "Escort dies, remaining crew survives";
         }
     }
 };
 
 const endgameFinalFight = (squadMate1, squadMate2) => {
-    let sm1Survival = squadMate1.loyalty ? 'survives' : 'dies';
-    let sm2Survival = squadMate2.loyalty ? 'survives' : 'dies';
+    let sm1Survival = squadMate1.loyalty ? "survives" : "dies";
+    let sm2Survival = squadMate2.loyalty ? "survives" : "dies";
     return `${squadMate1} ${sm1Survival}. ${squadMate2} ${sm2Survival}.`;
 };
 
 const holdTheLine = (x, y) => {
     // Need to deal with (somewhere) if you do not have all squadmates
     // Need to deal with (somewhere) if you have Samara vs. Morinth
-    let teamGroup1 = ['Grunt', 'Zaeed', 'Garrus'];
-    let teamGroup2 = ['Thane', 'Legion', 'Samara', 'Jacob', 'Miranda'];
-    let teamGroup3 = ['Jack', 'Kasumi', 'Tali', 'Mordin'];
-}
+    let teamGroup1 = ["Grunt", "Zaeed", "Garrus"];
+    let teamGroup2 = ["Thane", "Legion", "Samara", "Jacob", "Miranda"];
+    let teamGroup3 = ["Jack", "Kasumi", "Tali", "Mordin"];
+};
 
 const crewRequirementsCheck = reqSquad => {
     // 8 squadmates are required to start the Suicide Mission
@@ -170,17 +206,17 @@ let NormandySR2 = new Normandy();
 // Create all the Squadmates
 // Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
 //let Kasumi = new Squadmates('Kasumi');
-let Grunt = new Squadmates('Grunt');
-let Thane = new Squadmates('Thane');
-let Jack = new Squadmates('Jack');
-let Miranda = new Squadmates('Miranda');
-let Legion = new Squadmates('Legion');
-let Zaeed = new Squadmates('Zaeed');
-let Tali = new Squadmates('Tali');
-let Samara = new Squadmates('Samara');
-let Mordin = new Squadmates('Mordin');
-let Jacob = new Squadmates('Jacob');
-let Garrus = new Squadmates('Garrus');
+let Grunt = new Squadmates("Grunt");
+let Thane = new Squadmates("Thane");
+let Jack = new Squadmates("Jack");
+let Miranda = new Squadmates("Miranda");
+let Legion = new Squadmates("Legion");
+let Zaeed = new Squadmates("Zaeed");
+let Tali = new Squadmates("Tali");
+let Samara = new Squadmates("Samara");
+let Mordin = new Squadmates("Mordin");
+let Jacob = new Squadmates("Jacob");
+let Garrus = new Squadmates("Garrus");
 
 // User selected bits
 // Who did you recruit AND is active?
