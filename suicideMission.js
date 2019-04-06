@@ -117,8 +117,8 @@ const theApproachShieldCheck = (newNormandy, squad) => {
                 s.name === "Morinth"
             );
         });
-        console.log(death);
-        //return `${death.name} dies`;
+        // console.log("DEATH: " + death);
+        // return `${death.name} dies`;
     }
 };
 
@@ -200,10 +200,42 @@ const crewRequirementsCheck = reqSquad => {
     // TODO: Do you have the required recruited + active squad members?
 };
 
+const calculateHoldTheLineStrength = squad => {
+    squad.forEach(element => {
+        if (["Grunt", "Zaeed", "Garrus"].includes(element.name)) {
+            if (element.loyalty) {
+                element.strength = 4;
+            } else {
+                element.strength = 3;
+            }
+        } else if (
+            [
+                "Thane",
+                "Legion",
+                "Samara",
+                "Morinth",
+                "Jacob",
+                "Miranda"
+            ].includes(element.name)
+        ) {
+            if (element.loyalty) {
+                element.strength = 2;
+            } else {
+                element.strength = 1;
+            }
+        } else {
+            if (element.loyalty) {
+                element.strength = 1;
+            }
+        }
+    });
+};
+
 // Build a Normandy
 let NormandySR2 = new Normandy();
 
 // Create all the Squadmates
+// Actually...do we _need_ to create all the squadmates, or just those that are active?
 // Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
 //let Kasumi = new Squadmates('Kasumi');
 let Grunt = new Squadmates("Grunt");
@@ -237,6 +269,24 @@ let activeSquad = [
     Jacob,
     Garrus
 ];
+
+// User selected bits
+// Who in your active squad is loyal?
+// Probably make this something that can be set when creating a new squadmate
+Grunt.loyalty = true;
+Thane.loyalty = true;
+Jack.loyalty = true;
+Miranda.loyalty = true;
+Legion.loyalty = true;
+Zaeed.loyalty = true;
+Tali.loyalty = true;
+Samara.loyalty = true;
+Mordin.loyalty = true;
+Jacob.loyalty = true;
+Garrus.loyalty = true;
+
+// Determine each squad member's strength value for Hold The Line
+calculateHoldTheLineStrength(activeSquad);
 
 // User selected bits
 // Did you upgrade the Normandy?
