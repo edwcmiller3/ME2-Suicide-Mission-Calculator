@@ -1,73 +1,7 @@
 "use strict";
 
-class Squadmates {
-    constructor(name) {
-        this._name = name;
-        this._loyalty = false;
-        this._alive = true;
-        this._strength = 0;
-    }
-
-    get loyalty() {
-        return this._loyalty;
-    }
-
-    get name() {
-        return this._name;
-    }
-
-    get alive() {
-        return this._alive;
-    }
-
-    get strength() {
-        return this._strength;
-    }
-
-    set loyalty(loyal) {
-        this._loyalty = loyal;
-    }
-
-    set alive(state) {
-        this._alive = state;
-    }
-
-    set strength(val) {
-        this._strength = val;
-    }
-}
-
-class Normandy {
-    constructor() {
-        this._shieldUpgraded = false;
-        this._armorUpgraded = false;
-        this._cannonUpgraded = false;
-    }
-
-    get shieldUpgraded() {
-        return this._shieldUpgraded;
-    }
-
-    get armorUpgraded() {
-        return this._armorUpgraded;
-    }
-
-    get cannonUpgraded() {
-        return this._cannonUpgraded;
-    }
-
-    set shieldUpgraded(sUpgrade) {
-        this._shieldUpgraded = sUpgrade;
-    }
-
-    set armorUpgraded(aUpgrade) {
-        this._armorUpgraded = aUpgrade;
-    }
-
-    set cannonUpgraded(cUpgrade) {
-        this._cannonUpgraded = cUpgrade;
-    }
-}
+const Squadmates = require("./Squadmates.js");
+const Normandy = require("./Normandy.js");
 
 const theApproachArmorCheck = newNormandy => {
     // Heavy Ship Armor is from Jacob who is always an active squad member,
@@ -75,14 +9,14 @@ const theApproachArmorCheck = newNormandy => {
     if (newNormandy.armorUpgraded) {
         return "Normandy armor check passed - Safe";
     } else {
-        Jack.alive(false);
+        killSquadmate(Jack);
         return "Normandy armor check failed - Jack dies";
     }
 };
 
 const theApproachShieldCheck = (newNormandy, squad) => {
     // Multicore Shielding is from Tali whose recruitment can be skipped,
-    // check that she is recruited
+    // check that she is recruited (does not need to be loyal)
     if (squad.includes(Tali) && newNormandy.shieldUpgraded) {
         return "Normandy shield check passed - Safe";
     } else {
@@ -101,7 +35,7 @@ const theApproachShieldCheck = (newNormandy, squad) => {
             "Samara",
             "Morinth"
         ];
-        console.log(squad);
+        // console.log(squad);
         // This doesn't work either - orders it with Grunt first
         // Need to check that it is in this list and then order it via priority
         let death = squad.filter(s => {
@@ -150,7 +84,7 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
         return `${ventSpecialist} survives`;
     } else {
         // Else, kill the vent specialist
-        ventSpecialist.alive(false);
+        killSquadmate(ventSpecialist);
         return `${ventSpecialist} dies`;
     }
 };
@@ -176,6 +110,8 @@ const theEscortCheck = (escortSent, escort = null) => {
 };
 
 const endgameFinalFight = (squadMate1, squadMate2) => {
+    // Much as I like this, need to change it to _actually_ kill the squadmate(s),
+    // not just say they die (debateable, but let's do it for consistency)
     let sm1Survival = squadMate1.loyalty ? "survives" : "dies";
     let sm2Survival = squadMate2.loyalty ? "survives" : "dies";
     return `${squadMate1} ${sm1Survival}. ${squadMate2} ${sm2Survival}.`;
@@ -231,24 +167,34 @@ const calculateHoldTheLineStrength = squad => {
     });
 };
 
+const killSquadmate = squadmate => {
+    if (squadmate.alive) {
+        squadmate.alive = false;
+    } else {
+        // Squadmate was already dead
+        console.log(`Error: Squadmate ${squadmate.name} already dead`);
+    }
+};
+
 // Build a Normandy
 let NormandySR2 = new Normandy();
 
 // Create all the Squadmates
 // Actually...do we _need_ to create all the squadmates, or just those that are active?
 // Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
-//let Kasumi = new Squadmates('Kasumi');
-let Grunt = new Squadmates("Grunt");
-let Thane = new Squadmates("Thane");
-let Jack = new Squadmates("Jack");
-let Miranda = new Squadmates("Miranda");
-let Legion = new Squadmates("Legion");
-let Zaeed = new Squadmates("Zaeed");
-let Tali = new Squadmates("Tali");
-let Samara = new Squadmates("Samara");
-let Mordin = new Squadmates("Mordin");
-let Jacob = new Squadmates("Jacob");
-let Garrus = new Squadmates("Garrus");
+let Kasumi = new Squadmates("Kasumi", 1, undefined, 10);
+let Grunt = new Squadmates("Grunt", 7, 4, 5);
+let Thane = new Squadmates("Thane", 4, 1, 1);
+let Jack = new Squadmates("Jack", undefined, 5, 2);
+let Miranda = new Squadmates("Miranda", undefined, undefined);
+let Legion = new Squadmates("Legion", 2, undefined, 4);
+let Zaeed = new Squadmates("Zaeed", 6, 3, 11);
+let Tali = new Squadmates("Tali", 3, undefined, 9);
+let Samara = new Squadmates("Samara", 8, 6, 6);
+let Mordin = new Squadmates("Mordin", undefined, undefined, 8);
+let Jacob = new Squadmates("Jacob", undefined, undefined, 7);
+let Garrus = new Squadmates("Garrus", 5, 2, 3);
+let Morinth = new Squadmates("Morinth", 8, 6, 12);
 
 // User selected bits
 // Who did you recruit AND is active?
