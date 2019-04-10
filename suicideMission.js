@@ -22,15 +22,20 @@ const theApproachShieldCheck = (newNormandy, squad) => {
     } else {
         // Kill one non-party member in order:
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
-        // Thanks to Stobor for this super nifty ES6 way of sorting 
+        // Thanks to Stobor for this super nifty ES6 way of sorting
         // https://stackoverflow.com/a/979289
         let shieldCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
-            return parseInt(squadMate1.shieldCheckPriority) - parseInt(squadMate2.shieldCheckPriority);
+            return (
+                parseInt(squadMate1.shieldCheckPriority) -
+                parseInt(squadMate2.shieldCheckPriority)
+            );
         });
         // Kill the squadmate
         killSquadmate(shieldCheckSortedSquad[0]);
         // And now return the first squadmate (i.e. squadmate with lowest shieldCheckPriority value)
-        return `Normandy shield check failed - ${shieldCheckSortedSquad[0].name} dies`;
+        return `Normandy shield check failed - ${
+            shieldCheckSortedSquad[0].name
+        } dies`;
     }
 };
 
@@ -42,15 +47,20 @@ const theApproachWeaponsCheck = (newNormandy, squad) => {
     } else {
         // Kill one party member in order:
         // Thane, Garrus, Zaeed, Grunt, Jack, Samara/Morinth
-        // Thanks to Stobor for this super nifty ES6 way of sorting 
+        // Thanks to Stobor for this super nifty ES6 way of sorting
         // https://stackoverflow.com/a/979289
         let weaponsCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
-            return parseInt(squadMate1.weaponCheckPriority) - parseInt(squadMate2.weaponCheckPriority);
+            return (
+                parseInt(squadMate1.weaponCheckPriority) -
+                parseInt(squadMate2.weaponCheckPriority)
+            );
         });
         // Kill the squadmate
         killSquadmate(weaponsCheckSortedSquad[0]);
         // And now return the first squadmate (i.e. squadmate with lowest weaponCheckPriority)
-        return `Normandy weapons check failed - ${weaponsCheckSortedSquad[0].name} dies`
+        return `Normandy weapons check failed - ${
+            weaponsCheckSortedSquad[0].name
+        } dies`;
     }
 };
 
