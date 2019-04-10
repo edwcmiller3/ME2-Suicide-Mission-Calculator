@@ -6,7 +6,7 @@ const Normandy = require("./Normandy.js");
 const theApproachArmorCheck = newNormandy => {
     // Heavy Ship Armor is from Jacob who is always an active squad member,
     // no need to check if active
-    if (newNormandy.armorUpgraded) {
+    if (newNormandy.isArmorUpgraded) {
         return "Normandy armor check passed - Safe";
     } else {
         killSquadmate(Jack);
@@ -17,7 +17,7 @@ const theApproachArmorCheck = newNormandy => {
 const theApproachShieldCheck = (newNormandy, squad) => {
     // Multicore Shielding is from Tali whose recruitment can be skipped,
     // check that she is recruited (does not need to be loyal)
-    if (squad.includes(Tali) && newNormandy.shieldUpgraded) {
+    if (squad.includes(Tali) && newNormandy.isShieldUpgraded) {
         return "Normandy shield check passed - Safe";
     } else {
         // Kill one non-party member in order:
@@ -42,7 +42,7 @@ const theApproachShieldCheck = (newNormandy, squad) => {
 const theApproachWeaponsCheck = (newNormandy, squad) => {
     // Thanix Cannon is from Garrus who is always an active squad member,
     // no need to check if active
-    if (newNormandy.cannonUpgraded) {
+    if (newNormandy.isCannonUpgraded) {
         return "Normandy weapons check passed - Safe";
     } else {
         // Kill one party member in order:
@@ -73,8 +73,8 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
     // Vent specialist must be in list and loyal AND fireteam lead must be in list and loyal
     if (
         safeVentSpecialist.includes(ventSpecialist) &&
-        ventSpecialist.loyalty &&
-        (safeFireteamLead.includes(fireteamLead) && fireteamLead.loyalty)
+        ventSpecialist.isLoyal &&
+        (safeFireteamLead.includes(fireteamLead) && fireteamLead.isLoyal)
     ) {
         return `${ventSpecialist} survives`;
     } else {
@@ -96,9 +96,9 @@ const theCrewCheck = missions => {
 
 const theEscortCheck = (escortSent, escort = null) => {
     if (escortSent) {
-        if (escort && escort.loyalty) {
+        if (escort && escort.isLoyal) {
             return "Escort and remaining crew survive";
-        } else if (escort && !escort.loyalty) {
+        } else if (escort && !escort.isLoyal) {
             return "Escort dies, remaining crew survives";
         }
     }
@@ -107,8 +107,8 @@ const theEscortCheck = (escortSent, escort = null) => {
 const endgameFinalFight = (squadMate1, squadMate2) => {
     // Much as I like this, need to change it to _actually_ kill the squadmate(s),
     // not just say they die (debateable, but let's do it for consistency)
-    let sm1Survival = squadMate1.loyalty ? "survives" : "dies";
-    let sm2Survival = squadMate2.loyalty ? "survives" : "dies";
+    let sm1Survival = squadMate1.isLoyal ? "survives" : "dies";
+    let sm2Survival = squadMate2.isLoyal ? "survives" : "dies";
     return `${squadMate1} ${sm1Survival}. ${squadMate2} ${sm2Survival}.`;
 };
 
@@ -134,7 +134,7 @@ const crewRequirementsCheck = reqSquad => {
 const calculateHoldTheLineStrength = squad => {
     squad.forEach(element => {
         if (["Grunt", "Zaeed", "Garrus"].includes(element.name)) {
-            if (element.loyalty) {
+            if (element.isLoyal) {
                 element.strength = 4;
             } else {
                 element.strength = 3;
@@ -149,13 +149,13 @@ const calculateHoldTheLineStrength = squad => {
                 "Miranda"
             ].includes(element.name)
         ) {
-            if (element.loyalty) {
+            if (element.isLoyal) {
                 element.strength = 2;
             } else {
                 element.strength = 1;
             }
         } else {
-            if (element.loyalty) {
+            if (element.isLoyal) {
                 element.strength = 1;
             }
         }
@@ -163,8 +163,8 @@ const calculateHoldTheLineStrength = squad => {
 };
 
 const killSquadmate = squadmate => {
-    if (squadmate.alive) {
-        squadmate.alive = false;
+    if (squadmate.isAlive) {
+        squadmate.isAlive = false;
     } else {
         // Squadmate was already dead
         console.log(`Error: Squadmate ${squadmate.name} already dead`);
@@ -214,26 +214,26 @@ let activeSquad = [
 // User selected bits
 // Who in your active squad is loyal?
 // Probably make this something that can be set when creating a new squadmate
-Grunt.loyalty = true;
-Thane.loyalty = true;
-Jack.loyalty = true;
-Miranda.loyalty = true;
-Legion.loyalty = true;
-Zaeed.loyalty = true;
-Tali.loyalty = true;
-Samara.loyalty = true;
-Mordin.loyalty = true;
-Jacob.loyalty = true;
-Garrus.loyalty = true;
+Grunt.isLoyal = true;
+Thane.isLoyal = true;
+Jack.isLoyal = true;
+Miranda.isLoyal = true;
+Legion.isLoyal = true;
+Zaeed.isLoyal = true;
+Tali.isLoyal = true;
+Samara.isLoyal = true;
+Mordin.isLoyal = true;
+Jacob.isLoyal = true;
+Garrus.isLoyal = true;
 
 // Determine each squad member's strength value for Hold The Line
 calculateHoldTheLineStrength(activeSquad);
 
 // User selected bits
 // Did you upgrade the Normandy?
-NormandySR2.armorUpgraded = true;
-NormandySR2.shieldUpgraded = false; // troubleshooting theApproachShieldCheck
-NormandySR2.cannonUpgraded = true;
+NormandySR2.isArmorUpgraded = true;
+NormandySR2.isShieldUpgrade = false; // troubleshooting theApproachShieldCheck
+NormandySR2.isCannonUpgraded = true;
 
 // BEGIN THE APPROACH
 console.log(theApproachArmorCheck(NormandySR2));

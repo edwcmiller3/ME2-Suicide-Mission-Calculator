@@ -9,8 +9,8 @@ class Squadmates {
         holdTheLinePriority = 20
     ) {
         this._name = name;
-        this._loyalty = false;
-        this._alive = true;
+        this._isLoyal = false;
+        this._isAlive = true;
         this._strength = 0;
         this._shieldCheckPriority = shieldCheckPriority;
         this._weaponCheckPriority = weaponCheckPriority;
@@ -18,16 +18,16 @@ class Squadmates {
         this._holdTheLinePriority = holdTheLinePriority;
     }
 
-    get loyalty() {
-        return this._loyalty;
+    get isLoyal() {
+        return this._isLoyal;
     }
 
     get name() {
         return this._name;
     }
 
-    get alive() {
-        return this._alive;
+    get isAlive() {
+        return this._isAlive;
     }
 
     get strength() {
@@ -50,12 +50,12 @@ class Squadmates {
         return this._holdTheLinePriority;
     }
 
-    set loyalty(loyal) {
-        this._loyalty = loyal;
+    set isLoyal(loyal) {
+        this._isLoyal = loyal;
     }
 
-    set alive(state) {
-        this._alive = state;
+    set isAlive(state) {
+        this._isAlive = state;
     }
 
     set strength(val) {

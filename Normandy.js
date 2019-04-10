@@ -2,33 +2,33 @@
 
 class Normandy {
     constructor() {
-        this._shieldUpgraded = false;
-        this._armorUpgraded = false;
-        this._cannonUpgraded = false;
+        this._isShieldUpgraded = false;
+        this._isArmorUpgraded = false;
+        this._isCannonUpgraded = false;
     }
 
-    get shieldUpgraded() {
-        return this._shieldUpgraded;
+    get isShieldUpgraded() {
+        return this._isShieldUpgraded;
     }
 
-    get armorUpgraded() {
-        return this._armorUpgraded;
+    get isArmorUpgraded() {
+        return this._isArmorUpgraded;
     }
 
-    get cannonUpgraded() {
-        return this._cannonUpgraded;
+    get isCannonUpgraded() {
+        return this._isCannonUpgraded;
     }
 
-    set shieldUpgraded(sUpgrade) {
-        this._shieldUpgraded = sUpgrade;
+    set isShieldUpgraded(sUpgrade) {
+        this._isShieldUpgraded = sUpgrade;
     }
 
-    set armorUpgraded(aUpgrade) {
-        this._armorUpgraded = aUpgrade;
+    set isArmorUpgraded(aUpgrade) {
+        this._isArmorUpgraded = aUpgrade;
     }
 
-    set cannonUpgraded(cUpgrade) {
-        this._cannonUpgraded = cUpgrade;
+    set isCannonUpgraded(cUpgrade) {
+        this._isCannonUpgraded = cUpgrade;
     }
 };
 
