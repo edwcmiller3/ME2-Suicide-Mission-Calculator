@@ -22,41 +22,19 @@ const theApproachShieldCheck = (newNormandy, squad) => {
     } else {
         // Kill one non-party member in order:
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
-        // TODO
-        // return "Normandy shield check failed - ${person} dies"
-        const theApproachShieldCheckDeath = [
-            "Kasumi",
-            "Legion",
-            "Tali",
-            "Thane",
-            "Garrus",
-            "Zaeed",
-            "Grunt",
-            "Samara",
-            "Morinth"
-        ];
-        // console.log(squad);
-        // This doesn't work either - orders it with Grunt first
-        // Need to check that it is in this list and then order it via priority
-        let death = squad.filter(s => {
-            return (
-                s.name === "Kasumi" ||
-                s.name === "Legion" ||
-                s.name === "Tali" ||
-                s.name === "Thane" ||
-                s.name === "Garrus" ||
-                s.name === "Zaeed" ||
-                s.name === "Grunt" ||
-                s.name === "Samara" ||
-                s.name === "Morinth"
-            );
+        // Thanks to Stobor for this super nifty ES6 way of sorting 
+        // https://stackoverflow.com/a/979289
+        let shieldCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
+            return parseInt(squadMate1.shieldCheckPriority) - parseInt(squadMate2.shieldCheckPriority);
         });
-        // console.log("DEATH: " + death);
-        // return `${death.name} dies`;
+        // Kill the squadmate
+        killSquadmate(shieldCheckSortedSquad[0]);
+        // And now return the first squadmate (i.e. squadmate with lowest shieldCheckPriority value)
+        return `Normandy shield check failed - ${shieldCheckSortedSquad[0].name} dies`;
     }
 };
 
-const theApproachWeaponsCheck = newNormandy => {
+const theApproachWeaponsCheck = (newNormandy, squad) => {
     // Thanix Cannon is from Garrus who is always an active squad member,
     // no need to check if active
     if (newNormandy.cannonUpgraded) {
@@ -64,8 +42,15 @@ const theApproachWeaponsCheck = newNormandy => {
     } else {
         // Kill one party member in order:
         // Thane, Garrus, Zaeed, Grunt, Jack, Samara/Morinth
-        // TODO
-        // return "Normandy weapons check failed - ${person} dies"
+        // Thanks to Stobor for this super nifty ES6 way of sorting 
+        // https://stackoverflow.com/a/979289
+        let weaponsCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
+            return parseInt(squadMate1.weaponCheckPriority) - parseInt(squadMate2.weaponCheckPriority);
+        });
+        // Kill the squadmate
+        killSquadmate(weaponsCheckSortedSquad[0]);
+        // And now return the first squadmate (i.e. squadmate with lowest weaponCheckPriority)
+        return `Normandy weapons check failed - ${weaponsCheckSortedSquad[0].name} dies`
     }
 };
 
@@ -242,4 +227,13 @@ NormandySR2.cannonUpgraded = true;
 
 // BEGIN THE APPROACH
 console.log(theApproachArmorCheck(NormandySR2));
+// console.log("POST ARMOR CHECK SQUAD");
+// activeSquad.forEach(item => console.log(item));
+
 console.log(theApproachShieldCheck(NormandySR2, activeSquad));
+// console.log("POST SHIELD CHECK SQUAD");
+// activeSquad.forEach(item => console.log(item));
+
+console.log(theApproachWeaponsCheck(NormandySR2, activeSquad));
+// console.log("POST WEAPON CHECK SQUAD");
+// activeSquad.forEach(item => console.log(item));
