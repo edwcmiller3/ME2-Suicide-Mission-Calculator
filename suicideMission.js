@@ -14,6 +14,8 @@ const theApproachArmorCheck = newNormandy => {
     }
 };
 
+// TODO: Need to add check for current squad brought to fight the Oculus
+// TODO: Squad brought with Shepard cannot be killed
 const theApproachShieldCheck = (newNormandy, squad) => {
     // Multicore Shielding is from Tali whose recruitment can be skipped,
     // check that she is recruited (does not need to be loyal)
@@ -166,6 +168,23 @@ const calculateHoldTheLineStrength = squad => {
             }
         }
     });
+};
+
+// How many missions you complete between completing Reaper IFF and going through Omega-4 relay
+// determines how many of the kidnapped crew die
+// 0 missions = crew lives
+// 1-3 missions = half crew dies (minus Dr. Chakwas)
+// >3 missions = all crew dies (minus Dr. Chakwas)
+const crewDeathMissionTimer = missions => {
+    if (missions === 0) {
+        return "All of captured crew survives";
+    } else if (missions >= 1 && missions <= 3) {
+        return "Half of captured crew dies except for Dr. Chakwas";
+    } else if (missions > 3) {
+        return "All of captured crew dies except for Dr. Chakwas";
+    } else {
+        return `Missions must be greater than or equal to 0 - received ${missions}`;
+    }
 };
 
 const killSquadmate = squadmate => {
