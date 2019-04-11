@@ -94,13 +94,19 @@ const theCrewCheck = missions => {
     }
 };
 
-const theEscortCheck = (escortSent, escort = null) => {
-    if (escortSent) {
-        if (escort && escort.isLoyal) {
-            return "Escort and remaining crew survive";
-        } else if (escort && !escort.isLoyal) {
-            return "Escort dies, remaining crew survives";
+const theEscortCheck = (escort = null) => {
+    // Did you send a squadmate to escort the surviving crew?
+    if (escort) {
+        // Is the squadmate you sent loyal?
+        if (escort.isLoyal) {
+            return `${escort.name} and remaining crew survive`;
+        } else {
+            killSquadmate(escort);
+            return `${escort.name} dies but remaining crew survive`;
         }
+    } else {
+        // No squadmate sent to escort the crew
+        return "No escort - crew dies";
     }
 };
 
