@@ -103,7 +103,7 @@ const theEscortCheck = (escort = null) => {
         }
     } else {
         // No squadmate sent to escort the crew
-        return "No escort - crew dies";
+        return "No escort - remaining crew dies including Dr. Chakwas";
     }
 };
 
@@ -127,7 +127,7 @@ const crewRequirementsCheck = reqSquad => {
     // 8 squadmates are required to start the Suicide Mission
     // Of those 8, you are forced to have recruited AND active: Jacob, Miranda, Mordin, Garrus, and Jack
     if (reqSquad.length < 8) {
-        console.log("Error: Must have 8 squad members at a minimum");
+        console.error("Error: Must have 8 squad members at a minimum");
         return process.exit(1);
     }
 
@@ -246,24 +246,21 @@ Mordin.isLoyal = true;
 Jacob.isLoyal = true;
 Garrus.isLoyal = true;
 
-// Determine each squad member's strength value for Hold The Line
-calculateHoldTheLineStrength(activeSquad);
-
 // User selected bits
 // Did you upgrade the Normandy?
 NormandySR2.isArmorUpgraded = true;
-NormandySR2.isShieldUpgrade = false; // troubleshooting theApproachShieldCheck
+NormandySR2.isShieldUpgrade = false;
 NormandySR2.isCannonUpgraded = true;
 
 // BEGIN THE APPROACH
+console.log(crewDeathMissionTimer(0));
 console.log(theApproachArmorCheck(NormandySR2));
-// console.log("POST ARMOR CHECK SQUAD");
-// activeSquad.forEach(item => console.log(item));
-
 console.log(theApproachShieldCheck(NormandySR2, activeSquad, [Tali, Kasumi]));
-// console.log("POST SHIELD CHECK SQUAD");
-// activeSquad.forEach(item => console.log(item));
-
 console.log(theApproachWeaponsCheck(NormandySR2, activeSquad));
-// console.log("POST WEAPON CHECK SQUAD");
-// activeSquad.forEach(item => console.log(item));
+
+// ENTER THE COLLECTOR BASE
+// TODO
+
+// THE ENDGAME
+// Determine each squad member's strength value for Hold The Line
+calculateHoldTheLineStrength(activeSquad);
