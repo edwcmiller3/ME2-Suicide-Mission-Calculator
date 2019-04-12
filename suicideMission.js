@@ -78,27 +78,18 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
 
     // Vent specialist must be in list and loyal AND fireteam lead must be in list and loyal
     if (
-        safeVentSpecialist.includes(ventSpecialist) &&
+        safeVentSpecialist.includes(ventSpecialist.name) &&
         ventSpecialist.isLoyal &&
-        (safeFireteamLead.includes(fireteamLead) && fireteamLead.isLoyal)
+        (safeFireteamLead.includes(fireteamLead.name) && fireteamLead.isLoyal)
     ) {
         return `${ventSpecialist} survives`;
     } else {
-        // Else, kill the vent specialist
+        // Otherwise, kill the vent specialist
         killSquadmate(ventSpecialist);
         return `${ventSpecialist} dies`;
     }
 };
 
-const theCrewCheck = missions => {
-    if (missions === 0) {
-        return "All the crew survives";
-    } else if (missions <= 3) {
-        return "Half the crew dies";
-    } else {
-        return "All the crew dies except Dr. Chakwas";
-    }
-};
 
 const theEscortCheck = (escort = null) => {
     // Did you send a squadmate to escort the surviving crew?
