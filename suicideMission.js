@@ -14,9 +14,7 @@ const theApproachArmorCheck = newNormandy => {
     }
 };
 
-// TODO: Need to add check for current squad brought to fight the Oculus
-// TODO: Squad brought with Shepard cannot be killed
-const theApproachShieldCheck = (newNormandy, squad) => {
+const theApproachShieldCheck = (newNormandy, squad, oculusSquad) => {
     // Multicore Shielding is from Tali whose recruitment can be skipped,
     // check that she is recruited (does not need to be loyal)
     if (squad.includes(Tali) && newNormandy.isShieldUpgraded) {
@@ -26,12 +24,18 @@ const theApproachShieldCheck = (newNormandy, squad) => {
         // Kasumi, Legion, Tali, Thane, Garrus, Zaeed, Grunt, Samara/Morinth
         // Thanks to Stobor for this super nifty ES6 way of sorting
         // https://stackoverflow.com/a/979289
-        let shieldCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
+        let shieldCheckSortedSquad = squad.sort((squadmate1, squadmate2) => {
             return (
-                parseInt(squadMate1.shieldCheckPriority) -
-                parseInt(squadMate2.shieldCheckPriority)
+                parseInt(squadmate1.shieldCheckPriority) -
+                parseInt(squadmate2.shieldCheckPriority)
             );
         });
+
+        // Squad brought with Shepard to fight Oculus can't be killed, so remove from list
+        shieldCheckSortedSquad = shieldCheckSortedSquad.filter(squadmate => {
+            return squadmate !== oculusSquad[0] && squadmate !== oculusSquad[1];
+        });
+
         // Kill the squadmate
         killSquadmate(shieldCheckSortedSquad[0]);
         // And now return the first squadmate (i.e. squadmate with lowest shieldCheckPriority value)
@@ -51,10 +55,10 @@ const theApproachWeaponsCheck = (newNormandy, squad) => {
         // Thane, Garrus, Zaeed, Grunt, Jack, Samara/Morinth
         // Thanks to Stobor for this super nifty ES6 way of sorting
         // https://stackoverflow.com/a/979289
-        let weaponsCheckSortedSquad = squad.sort((squadMate1, squadMate2) => {
+        let weaponsCheckSortedSquad = squad.sort((squadmate1, squadmate2) => {
             return (
-                parseInt(squadMate1.weaponCheckPriority) -
-                parseInt(squadMate2.weaponCheckPriority)
+                parseInt(squadmate1.weaponCheckPriority) -
+                parseInt(squadmate2.weaponCheckPriority)
             );
         });
         // Kill the squadmate
@@ -112,12 +116,12 @@ const theEscortCheck = (escort = null) => {
     }
 };
 
-const endgameFinalFight = (squadMate1, squadMate2) => {
+const endgameFinalFight = (squadmate1, squadmate2) => {
     // Much as I like this, need to change it to _actually_ kill the squadmate(s),
     // not just say they die (debateable, but let's do it for consistency)
-    let sm1Survival = squadMate1.isLoyal ? "survives" : "dies";
-    let sm2Survival = squadMate2.isLoyal ? "survives" : "dies";
-    return `${squadMate1} ${sm1Survival}. ${squadMate2} ${sm2Survival}.`;
+    let sm1Survival = squadmate1.isLoyal ? "survives" : "dies";
+    let sm2Survival = squadmate2.isLoyal ? "survives" : "dies";
+    return `${squadmate1} ${sm1Survival}. ${squadmate2} ${sm2Survival}.`;
 };
 
 const holdTheLine = (x, y) => {
@@ -265,7 +269,7 @@ console.log(theApproachArmorCheck(NormandySR2));
 // console.log("POST ARMOR CHECK SQUAD");
 // activeSquad.forEach(item => console.log(item));
 
-console.log(theApproachShieldCheck(NormandySR2, activeSquad));
+console.log(theApproachShieldCheck(NormandySR2, activeSquad, [Tali, Kasumi]));
 // console.log("POST SHIELD CHECK SQUAD");
 // activeSquad.forEach(item => console.log(item));
 
