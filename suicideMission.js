@@ -90,7 +90,6 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
     }
 };
 
-
 const theEscortCheck = (escort = null) => {
     // Did you send a squadmate to escort the surviving crew?
     if (escort) {
@@ -108,30 +107,52 @@ const theEscortCheck = (escort = null) => {
 };
 
 const endgameFinalFight = (squadmate1, squadmate2) => {
-    // Much as I like this, need to change it to _actually_ kill the squadmate(s),
-    // not just say they die (debateable, but let's do it for consistency)
-    let sm1Survival = squadmate1.isLoyal ? "survives" : "dies";
-    let sm2Survival = squadmate2.isLoyal ? "survives" : "dies";
+    if (squadmate1.isLoyal) {
+        let sm1Survival = "survives";
+    } else {
+        killSquadmate(squadmate1);
+        let sm1Survival = "dies";
+    }
+
+    if (squadmate2.isLoyal) {
+        let sm2Survival = "survives";
+    } else {
+        killSquadmate(squadmate2);
+        let sm2Survival = "dies";
+    }
+
     return `${squadmate1} ${sm1Survival}. ${squadmate2} ${sm2Survival}.`;
 };
 
 const holdTheLine = (x, y) => {
-    // Need to deal with (somewhere) if you do not have all squadmates
     // Need to deal with (somewhere) if you have Samara vs. Morinth
     let teamGroup1 = ["Grunt", "Zaeed", "Garrus"];
     let teamGroup2 = ["Thane", "Legion", "Samara", "Jacob", "Miranda"];
     let teamGroup3 = ["Jack", "Kasumi", "Tali", "Mordin"];
 };
 
-const crewRequirementsCheck = reqSquad => {
+const crewRequirementsCheck = squad => {
     // 8 squadmates are required to start the Suicide Mission
     // Of those 8, you are forced to have recruited AND active: Jacob, Miranda, Mordin, Garrus, and Jack
-    if (reqSquad.length < 8) {
+    if (squad.length < 8) {
         console.error("Error: Must have 8 squad members at a minimum");
         return process.exit(1);
     }
 
-    // TODO: Do you have the required recruited + active squad members?
+    // Either this, or an if with 4 'or's to check if required members are in squad
+    let requiredCount = 0;
+    squad.forEach(s => {
+        if (s.isRequired) {
+            requiredCount++;
+        }
+    });
+
+    if (requiredCount < 5) {
+        console.error("Error: Squad does not contain required members");
+        return process.exit(1);
+    }
+
+    return "Crew requirements check passed";
 };
 
 const calculateHoldTheLineStrength = squad => {
@@ -195,29 +216,33 @@ const killSquadmate = squadmate => {
 let NormandySR2 = new Normandy();
 
 // Create all the Squadmates
-// Actually...do we _need_ to create all the squadmates, or just those that are active?
-// Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack, Grunt*
-let Kasumi = new Squadmates("Kasumi", 1, undefined, 10);
-let Grunt = new Squadmates("Grunt", 7, 4, 5);
-let Thane = new Squadmates("Thane", 4, 1, 1);
-let Jack = new Squadmates("Jack", undefined, 5, 2);
-let Miranda = new Squadmates("Miranda", undefined, undefined);
-let Legion = new Squadmates("Legion", 2, undefined, 4);
-let Zaeed = new Squadmates("Zaeed", 6, 3, 11);
-let Tali = new Squadmates("Tali", 3, undefined, 9);
-let Samara = new Squadmates("Samara", 8, 6, 6);
-let Mordin = new Squadmates("Mordin", undefined, undefined, 8);
-let Jacob = new Squadmates("Jacob", undefined, undefined, 7);
-let Garrus = new Squadmates("Garrus", 5, 2, 3);
-let Morinth = new Squadmates("Morinth", 8, 6, 12);
+// Minimum squad required to recruit: Jacob, Miranda, Mordin, Garrus, Jack
+// name, shieldCheckPriority, weaponCheckPriority, longWalkPriority, holdTheLinePriority, isRequired
+let Kasumi = new Squadmates("Kasumi", 1, undefined, 10, 3, false);
+let Grunt = new Squadmates("Grunt", 7, 4, 5, 12, false);
+let Thane = new Squadmates("Thane", 4, 1, 1, 10, false);
+let Jack = new Squadmates("Jack", undefined, 5, 2, 4, true);
+let Miranda = new Squadmates(
+    "Miranda",
+    undefined,
+    undefined,
+    undefined,
+    5,
+    true
+);
+let Legion = new Squadmates("Legion", 2, undefined, 4, 9, false);
+let Zaeed = new Squadmates("Zaeed", 6, 3, 11, 11, false);
+let Tali = new Squadmates("Tali", 3, undefined, 9, 2, false);
+let Samara = new Squadmates("Samara", 8, 6, 6, 8, false);
+let Mordin = new Squadmates("Mordin", undefined, undefined, 8, 1, true);
+let Jacob = new Squadmates("Jacob", undefined, undefined, 7, 6, true);
+let Garrus = new Squadmates("Garrus", 5, 2, 3, 7, true);
+let Morinth = new Squadmates("Morinth", 8, 6, 12, 8, false);
 
 // User selected bits
 // Who did you recruit AND is active?
-// e.g. Grunt can be recruited, but not active if pod never opened
-// Need at least 8 active squad members
-// Active squad must include Jacob, Miranda, Mordin, Garrus, and Jack
 let activeSquad = [
-    //Kasumi, troubleshooting theApproachShieldCheck
+    Kasumi,
     Grunt,
     Thane,
     Jack,
@@ -234,17 +259,17 @@ let activeSquad = [
 // User selected bits
 // Who in your active squad is loyal?
 // Probably make this something that can be set when creating a new squadmate
-Grunt.isLoyal = true;
-Thane.isLoyal = true;
-Jack.isLoyal = true;
-Miranda.isLoyal = true;
-Legion.isLoyal = true;
-Zaeed.isLoyal = true;
-Tali.isLoyal = true;
-Samara.isLoyal = true;
-Mordin.isLoyal = true;
-Jacob.isLoyal = true;
-Garrus.isLoyal = true;
+Grunt.isLoyal = false;
+Thane.isLoyal = false;
+Jack.isLoyal = false;
+Miranda.isLoyal = false;
+Legion.isLoyal = false;
+Zaeed.isLoyal = false;
+Tali.isLoyal = false;
+Samara.isLoyal = false;
+Mordin.isLoyal = false;
+Jacob.isLoyal = false;
+Garrus.isLoyal = false;
 
 // User selected bits
 // Did you upgrade the Normandy?
@@ -264,3 +289,5 @@ console.log(theApproachWeaponsCheck(NormandySR2, activeSquad));
 // THE ENDGAME
 // Determine each squad member's strength value for Hold The Line
 calculateHoldTheLineStrength(activeSquad);
+console.log(activeSquad);
+console.log(crewRequirementsCheck(activeSquad));

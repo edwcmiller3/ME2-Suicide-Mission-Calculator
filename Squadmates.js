@@ -6,7 +6,8 @@ class Squadmates {
         shieldCheckPriority = 20,
         weaponCheckPriority = 20,
         longWalkPriority = 20,
-        holdTheLinePriority = 20
+        holdTheLinePriority = 20,
+        isRequired
     ) {
         this._name = name;
         this._isLoyal = false;
@@ -16,6 +17,7 @@ class Squadmates {
         this._weaponCheckPriority = weaponCheckPriority;
         this._longWalkPriority = longWalkPriority;
         this._holdTheLinePriority = holdTheLinePriority;
+        this._isRequired = isRequired;
     }
 
     get isLoyal() {
@@ -48,6 +50,10 @@ class Squadmates {
 
     get holdTheLinePriority() {
         return this._holdTheLinePriority;
+    }
+
+    get isRequired() {
+        return this._isRequired;
     }
 
     set isLoyal(loyal) {
