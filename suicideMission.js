@@ -93,6 +93,7 @@ const theBaseVentCheck = (ventSpecialist, fireteamLead) => {
 const theEscortCheck = (escort = null) => {
     // Did you send a squadmate to escort the surviving crew?
     if (escort) {
+        escort.isEscort = true;
         // Is the squadmate you sent loyal?
         if (escort.isLoyal) {
             return `${escort.name} and remaining crew survive`;
@@ -124,37 +125,6 @@ const endgameFinalFight = (squadmate1, squadmate2) => {
     return `${squadmate1} ${sm1Survival}. ${squadmate2} ${sm2Survival}.`;
 };
 
-const holdTheLine = (x, y) => {
-    // Need to deal with (somewhere) if you have Samara vs. Morinth
-    let teamGroup1 = ["Grunt", "Zaeed", "Garrus"];
-    let teamGroup2 = ["Thane", "Legion", "Samara", "Jacob", "Miranda"];
-    let teamGroup3 = ["Jack", "Kasumi", "Tali", "Mordin"];
-};
-
-const crewRequirementsCheck = squad => {
-    // 8 squadmates are required to start the Suicide Mission
-    // Of those 8, you are forced to have recruited AND active: Jacob, Miranda, Mordin, Garrus, and Jack
-    if (squad.length < 8) {
-        console.error("Error: Must have 8 squad members at a minimum");
-        return process.exit(1);
-    }
-
-    // Either this, or an if with 4 'or's to check if required members are in squad
-    let requiredCount = 0;
-    squad.forEach(s => {
-        if (s.isRequired) {
-            requiredCount++;
-        }
-    });
-
-    if (requiredCount < 5) {
-        console.error("Error: Squad does not contain required members");
-        return process.exit(1);
-    }
-
-    return "Crew requirements check passed";
-};
-
 const calculateHoldTheLineStrength = squad => {
     squad.forEach(element => {
         if (["Grunt", "Zaeed", "Garrus"].includes(element.name)) {
@@ -184,6 +154,47 @@ const calculateHoldTheLineStrength = squad => {
             }
         }
     });
+};
+
+const holdTheLine = (squad) => {
+    // Need to deal with (somewhere) if you have Samara vs. Morinth
+    let teamGroup1 = ["Grunt", "Zaeed", "Garrus"];
+    let teamGroup2 = ["Thane", "Legion", "Samara", "Jacob", "Miranda"];
+    let teamGroup3 = ["Jack", "Kasumi", "Tali", "Mordin"];
+
+    // Death order
+    // Mordin, Tali, Kasumi, Jack, Miranda, Jacob, Garrus,Samara/Morinth, Legion, Thane, Zaeed, Grunt
+    // Filter on 1) surviving squadmates, 2) is not the escort, and 3) is not with Shepard
+    const holdTheLineSquad = squad.filter((squadmate) => {
+        return squadmate.isAlive && !squadmate.isEscort;
+    })
+
+    // Testing
+    return holdTheLineSquad;
+};
+
+const crewRequirementsCheck = squad => {
+    // 8 squadmates are required to start the Suicide Mission
+    // Of those 8, you are forced to have recruited AND active: Jacob, Miranda, Mordin, Garrus, and Jack
+    if (squad.length < 8) {
+        console.error("Error: Must have 8 squad members at a minimum");
+        return process.exit(1);
+    }
+
+    // Either this, or an if with 4 'or's to check if required members are in squad
+    let requiredCount = 0;
+    squad.forEach(s => {
+        if (s.isRequired) {
+            requiredCount++;
+        }
+    });
+
+    if (requiredCount < 5) {
+        console.error("Error: Squad does not contain required members");
+        return process.exit(1);
+    }
+
+    return "Crew requirements check passed";
 };
 
 // How many missions you complete between completing Reaper IFF and going through Omega-4 relay
@@ -291,3 +302,6 @@ console.log(theApproachWeaponsCheck(NormandySR2, activeSquad));
 calculateHoldTheLineStrength(activeSquad);
 console.log(activeSquad);
 console.log(crewRequirementsCheck(activeSquad));
+
+console.log(theEscortCheck(Mordin));
+console.log(holdTheLine(activeSquad));

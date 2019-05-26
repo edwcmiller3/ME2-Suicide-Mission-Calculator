@@ -18,6 +18,7 @@ class Squadmates {
         this._longWalkPriority = longWalkPriority;
         this._holdTheLinePriority = holdTheLinePriority;
         this._isRequired = isRequired;
+        this._isEscort = false;
     }
 
     get isLoyal() {
@@ -56,6 +57,10 @@ class Squadmates {
         return this._isRequired;
     }
 
+    get isEscort() {
+        return this._isEscort;
+    }
+
     set isLoyal(loyal) {
         this._isLoyal = loyal;
     }
@@ -66,6 +71,10 @@ class Squadmates {
 
     set strength(val) {
         this._strength = val;
+    }
+
+    set isEscort(escort) {
+        this._isEscort = escort;
     }
 }
 
